@@ -3,11 +3,12 @@ Playerv2 = PVector(250, 550)
 Playerv3 = PVector(270, 600)
 speedx = 0
 speedy = 0
+keysPressed = [False for _ in range(128)]
 
 def setup():
     size(500,700)
 def draw():
-    global speedx, speedy, Playerv1, Playerv2, Playerv3
+    global speedx, speedy, Playerv1, Playerv2, Playerv3, keysPressed
     Playerv1.x += speedx
     Playerv2.x += speedx
     Playerv3.x += speedx
@@ -19,32 +20,18 @@ def draw():
     strokeWeight(5)
     triangle(Playerv1.x, Playerv1.y, Playerv2.x, Playerv2.y, Playerv3.x, Playerv3.y)
     if keyPressed:
-        if keyCode == LEFT:    
+        if keysPressed[37]:
             speedx = -3
-        if keyCode == RIGHT:
-            speedx = 3
-        if keyCode == UP:
+        elif keysPressed[38]:
             speedy = -3
-        if keyCode == DOWN:
+        elif keysPressed[39]:
+            speedx = 3
+        elif keysPressed[40]:
             speedy = 3
-    elif keyPressed == False:
+    else:
         speedx = 0
-        speedy = 0
-        
-keysPressed = [False for _ in range(128)]
-
-def setup():
-    size(200, 200)
-    
-def draw():
-    if keysPressed[37]:
-        print("left")
-    elif keysPressed[38]:
-        print("up")
-    elif keysPressed[39]:
-        print("down")
-    elif keysPressed[40]:
-        print("right")
+        speedy = 0    
+  
 def keyPressed():
     keysPressed[keyCode] = True
     
