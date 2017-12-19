@@ -4,12 +4,29 @@ Playerv3 = PVector(270, 600)
 speedx = 0
 speedy = 0
 keysPressed = [False for _ in range(128)]
+a = 135 
+b = 206
+c = 250
+bgA = random(500)
+bgB = random(500)
+bgC = random(500)
+bgD = random(500)
+bgE = random(500)
 
 def setup():
     size(500,700)
 def draw():
-    global speedx, speedy, Playerv1, Playerv2, Playerv3, keysPressed
-    background(0)
+    global speedx, speedy, Playerv1, Playerv2, Playerv3, keysPressed, a, b, c, bgA, bgB, bgC, bgD, bgE
+    # background
+    if a > 0:
+        a -= 0.25
+    if b > 0:
+        b -= 0.25
+    if c > 0:
+        c -= 0.25
+    background(a, b, c)
+    
+    # Player
     fill(50,200,10)
     strokeWeight(5)
     stroke(255)
@@ -48,13 +65,7 @@ def draw():
     Playerv2.y += speedy
     Playerv3.y += speedy
     speedx = 0
-    speedy = 0
-    # background
-    strokeWeight(1)
-    fill(255,255,0)
-    ellipse(350, 200, 120, 120)
-    fill(255, 69, 0)
-    ellipse(350, 200, 70, 70)
+    speedy = 0    
 def keyPressed():
     keysPressed[keyCode] = True
     
