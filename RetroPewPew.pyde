@@ -12,12 +12,39 @@ HTPSize = 30
 Menu = True
 Play = False
 HTP = False
-
+img = None
+img_2 = None
+yimgA = 0
+yimgB = -500
+bs = PVector(Playerv2.x, Playerv2.y - 5)
+bullet = [False for _ in range(128)]
 def setup():
+    global img, img_2
     size(500,700)
+    img = None
+    img = createGraphics(width, height)
+    img.beginDraw()
+    for i in range(10):
+        x = random(img.width)
+        y = random(img.width)
+        diameter = random(5, 15)
+        img.fill(255, 69, 0)
+        img.ellipse(x, y, diameter, diameter)
+    img.endDraw()
+    img_2 = None
+    img_2 = createGraphics(width, height)
+    img_2.beginDraw()
+    for i in range(10):
+        x = random(img_2.width)
+        y = random(img_2.width)
+        diameter = random(5, 15)
+        img_2.fill(255, 69, 0)
+        img_2.ellipse(x, y, diameter, diameter)
+    img_2.endDraw()
 def draw():
-    global speedx, speedy, Playerv1, Playerv2, Playerv3, keysPressed, a, b, c, PlaySize, HTPSize, HTP
+    global speedx, speedy, Playerv1, Playerv2, Playerv3, keysPressed, a, b, c, PlaySize, HTPSize, HTP, img, yimgA, yimgB, bs, bullet
     # background
+   
     if Play == True:
         if a > 0:
             a -= 0.25
@@ -26,6 +53,18 @@ def draw():
         if c > 100:
             c -= 0.25
     background(a, b, c)
+    img.background(a, b, c)
+    img_2.background(a, b, c)
+    if Play == True:
+        imgspeed = 1
+        yimgA += imgspeed
+        yimgB += imgspeed
+        if yimgA >= img.height:
+            yimgA = -height
+        elif yimgB >= img.height:
+            yimgB = -height
+        image(img, 0, yimgA)
+        image(img_2, 0, yimgB)
 
     # Player
     if Menu == True or Play == True:
@@ -65,7 +104,7 @@ def draw():
         text("ARROW KEYS - Up, Down, Left, Right", 20, 100)
         text("SPACE - Shoot", 20, 140)
         text("Avoid incoming enemy bullets and defeat the boss to win!!", 20, 160, 480, 300)
-    #movement
+    #movement and shooting
     if Play == True:
         if keysPressed[37]:
             speedx = -3
@@ -75,8 +114,12 @@ def draw():
             speedy = -3
         elif keysPressed[40]:
             speedy = 3
-        if keysPressed[32]:
-            ellipse(250, 350, 100, 100)
+        if bullet[32]:
+            bs.y -= 4
+            bs.x = bs.x
+            fill(139, 0, 0)
+            strokeWeight(0)
+            rect(bs.x, bs.y, 5, 10)
 
     Playerv1.x += speedx
     Playerv2.x += speedx
@@ -88,6 +131,7 @@ def draw():
     speedy = 0    
 def keyPressed():
     keysPressed[keyCode] = True
+    bullet[keyCode] = True
     
 def keyReleased():
     keysPressed[keyCode] = False
