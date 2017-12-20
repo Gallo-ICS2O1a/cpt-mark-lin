@@ -1,3 +1,4 @@
+# use list to shoot multiple bullets and PVectors in list
 Playerv1 = PVector(230, 600)
 Playerv2 = PVector(250, 550)
 Playerv3 = PVector(270, 600)
