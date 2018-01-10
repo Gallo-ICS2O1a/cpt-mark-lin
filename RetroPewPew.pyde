@@ -16,10 +16,11 @@ img = None
 img_2 = None
 yimgA = 0
 yimgB = -500
-bs = [PVector(Playerv2.x - 2.5, Playerv2.y - 5) for _ in range(100)]
-bullets = [False for _ in range(128)]
+bullets = [False for _ in range(1000)]
+bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(1000)]
 backSize = 30
 i = 0
+delay = 0
 
 
 def setup():
@@ -49,8 +50,8 @@ def setup():
 
 def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3
-    global keysPressed, bs, bullets
-    global bgcoloura, bgcolourb, bgcolourc,
+    global keysPressed, bullets, bloc, delay
+    global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play
     global img, yimgA, yimgB, backSize, i
     # background
@@ -131,12 +132,21 @@ def draw():
         elif keysPressed[40]:
             speedy = 3
         if keysPressed[32]:
-            bs[i].y -= 4
-            fill(139, 0, 0)
+            bullets[i] = True
+            i = i + 1
+    for x in range(1000):
+        if bullets[x]:
+            fill(0, 129, 0)
             strokeWeight(0)
-            rect(bs[i].x, bs[i].y, 5, 10)
-            i += 1
-
+            bloc[x].x = bloc[x].x
+            bloc[x].y = bloc[x].y
+            rect(bloc[x].x, bloc[x].y, 5, 10)
+            bcheck[x] = True
+            if bloc[x].y >= Playerv2.y:
+                bloc[x].y = Playerv2.y
+    for x in range(1000):
+        if bullets[x]:
+            bloc[x].y -= 4
     Playerv1.x += speedx
     Playerv2.x += speedx
     Playerv3.x += speedx
@@ -145,6 +155,9 @@ def draw():
     Playerv3.y += speedy
     speedx = 0
     speedy = 0
+    
+    # Enemies
+    # Enemy 1
 
 
 def keyPressed():
