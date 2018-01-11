@@ -26,6 +26,7 @@ delay = 0
 def setup():
     global img, img_2
     size(500, 700)
+    # background stuff
     img = None
     img = createGraphics(width, height)
     img.beginDraw()
@@ -135,18 +136,23 @@ def draw():
             bullets[i] = True
             i = i + 1
     for x in range(1000):
-        if bullets[x]:
-            fill(0, 129, 0)
+        if bullets[x] is False:
+            bloc[x].x = Playerv2.x - 2.5
+    for x in range(1000):
+        if bullets[x] and delay >= 10:
+            fill(250, 129, 0)
             strokeWeight(0)
             bloc[x].x = bloc[x].x
             bloc[x].y = bloc[x].y
             rect(bloc[x].x, bloc[x].y, 5, 10)
-            bcheck[x] = True
             if bloc[x].y >= Playerv2.y:
                 bloc[x].y = Playerv2.y
+            delay = 0
+        else:
+            delay += 1
     for x in range(1000):
         if bullets[x]:
-            bloc[x].y -= 4
+            bloc[x].y -= 7
     Playerv1.x += speedx
     Playerv2.x += speedx
     Playerv3.x += speedx
@@ -158,7 +164,7 @@ def draw():
     
     # Enemies
     # Enemy 1
-
+    
 
 def keyPressed():
     keysPressed[keyCode] = True
