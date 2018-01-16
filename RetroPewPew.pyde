@@ -21,6 +21,9 @@ bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(1000)]
 backSize = 30
 i = 0
 delay = 0
+enemies = [False for _ in range(200)]
+eloc = [PVector(random(50, 450), 0) for _ in range(200)]
+count = 0
 
 
 def setup():
@@ -55,6 +58,7 @@ def draw():
     global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play
     global img, yimgA, yimgB, backSize, i
+    global eloc, enemies, count
     # background
     if Play:
         if bgcoloura > 0:
@@ -164,7 +168,34 @@ def draw():
     
     # Enemies
     # Enemy 1
-    
+    if Play:
+        for i in range(1000):
+            if count >= 0:
+                count+=1
+                for x in range(20):
+                    enemies[x] = True
+            elif count >= 500:
+                count+=1
+                for x in range(21, 50):
+                    enemies[x] = True
+            elif count >= 1250:
+                count+=1
+                for x in range(51, 100):
+                    enemies[x] = True
+            elif count >= 2250:
+                count += 1
+                for x in range(101, 200):
+                    enemies[x] = True
+        for i in range(200):
+            if enemies[i]:
+                eloc[i].x += random(-5, 5)
+                eloc[i].y -= random(3, 7)
+        for i in range(1000):
+            for k in range(200):
+                if (bloc[i].x >= eloc[k].x - 25 and bloc[i].x <= eloc[k].x + 25) and (bloc[i].y >= eloc[k].y - 25 and bloc[i].y <= eloc[k].y):
+                    enemies[k] = False
+                    bullets[i] = False
+
 
 def keyPressed():
     keysPressed[keyCode] = True
