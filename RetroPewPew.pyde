@@ -21,8 +21,8 @@ bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(1000)]
 backSize = 30
 i = 0
 delay = 0
-enemies = [False for _ in range(200)]
-eloc = [PVector(random(50, 450), 0) for _ in range(200)]
+enemies = [False for _ in range(30)]
+eloc = [PVector(random(50, 450), 0) for _ in range(30)]
 count = 0
 
 
@@ -172,24 +172,25 @@ def draw():
         for i in range(1000):
             if count >= 0:
                 count+=1
-                for x in range(20):
+                for x in range(5):
                     enemies[x] = True
             elif count >= 500:
                 count+=1
-                for x in range(21, 50):
+                for x in range(6, 10):
                     enemies[x] = True
             elif count >= 1250:
                 count+=1
-                for x in range(51, 100):
+                for x in range(11, 20):
                     enemies[x] = True
             elif count >= 2250:
                 count += 1
-                for x in range(101, 200):
+                for x in range(21, 30):
                     enemies[x] = True
-        for i in range(200):
+        for i in range(30):
             if enemies[i]:
                 eloc[i].x += random(-5, 5)
-                eloc[i].y -= random(3, 7)
+                eloc[i].y += random(3, 7)
+                rect(eloc[i].x, eloc[i].y, 50, 50)
         for i in range(1000):
             for k in range(200):
                 if (bloc[i].x >= eloc[k].x - 25 and bloc[i].x <= eloc[k].x + 25) and (bloc[i].y >= eloc[k].y - 25 and bloc[i].y <= eloc[k].y):
