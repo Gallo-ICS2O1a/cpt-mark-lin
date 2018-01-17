@@ -16,8 +16,8 @@ img = None
 img_2 = None
 yimgA = 0
 yimgB = -500
-bullets = [False for _ in range(1000)]
-bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(1000)]
+bullets = [False for _ in range(10000)]
+bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(10000)]
 backSize = 30
 i = 0
 delay = 0
@@ -131,6 +131,36 @@ def draw():
 
     # movement and shooting
     if Play:
+        count += 1
+        if count >= 50 and wave == 1:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 40 and wave == 2:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 30 and wave == 3:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 30 and wave == 4:
+            enemies[ii] = True
+        if ii >= 10 and wave == 1:
+            wave += 1
+        elif ii >= 25 and wave == 2:
+            wave += 1
+        elif ii >= 50 and wave == 3:
+            wave += 1
+        elif ii >= 100:
+            Play = False
+            Win = True
+        for x in range(100):
+            if enemies[x]:
+                ellipse(eloc[x].x, eloc[x].y, random(30, 50), random(30, 50))
+        for x in range(100):
+            if enemies[x]:
+                eloc[x].y += 4
         if keysPressed[37]:
             speedx = -3
         elif keysPressed[39]:
@@ -160,6 +190,7 @@ def draw():
     for x in range(1000):
         if bullets[x]:
             bloc[x].y -= 7
+    
     Playerv1.x += speedx
     Playerv2.x += speedx
     Playerv3.x += speedx
@@ -168,41 +199,6 @@ def draw():
     Playerv3.y += speedy
     speedx = 0
     speedy = 0
-    
-    # Fighting
-    if Play:
-        count += 1
-        if count >= 50 and wave == 1:
-            enemies[ii] = True
-            ii += 1
-            count = 0
-        elif count >= 40 and wave == 2:
-            enemies[ii] = True
-            ii += 1
-            count = 0
-        elif count >= 30 and wave == 3:
-            enemies[ii] = True
-            ii += 1
-            count = 0
-        elif count >= 30 and wave == 4:
-            enemies[ii] = True
-        if ii >= 10 and wave == 1:
-            wave += 1
-        elif ii >= 25 and wave == 2:
-            wave += 1
-        elif ii >= 50 and wave == 3:
-            wave += 1
-        elif ii >= 100:
-            Play = False
-            Win = True
-        for i in range(100):
-            if enemies[i]:
-                eloc[i].y = eloc[i].y
-                ellipse(eloc[i].x, eloc[i].y, random(30, 50), random(30, 50))
-        for i in range(100):
-            if enemies[i]:
-                eloc[i].y += 4
-            
 
 
 def keyPressed():
