@@ -24,8 +24,10 @@ delay = 0
 enemies = [False for _ in range(100)]
 eloc = [PVector(random(50, 450), 0) for _ in range(100)]
 count = 0
-timer = 0
-
+wave = 1
+ii = 0
+Win = False
+Lose = False
 
 def setup():
     global img, img_2
@@ -57,9 +59,9 @@ def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3
     global keysPressed, bullets, bloc, delay
     global bgcoloura, bgcolourb, bgcolourc
-    global PlaySize, HTPSize, HTP, Menu, Play
+    global PlaySize, HTPSize, HTP, Menu, Play, Win, Lose
     global img, yimgA, yimgB, backSize, i
-    global eloc, enemies, count, timer
+    global eloc, enemies, count, wave, ii
     # background
     if Play:
         if bgcoloura > 0:
@@ -167,20 +169,41 @@ def draw():
     speedx = 0
     speedy = 0
     
-    # Enemies
-    # Enemy 1
+    # Fighting
     if Play:
-        if count >= 10 and timer <= 1000:
-            count = 0
-            for i in range(10):
-                enemies[i] = True
-        elif count >= 10 and timer <= 2000:
-            count = 0
-            for i in range(11, 31)
-            enemies[i] = True
-        
         count += 1
-        timer += 1
+        if count >= 50 and wave == 1:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 40 and wave == 2:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 30 and wave == 3:
+            enemies[ii] = True
+            ii += 1
+            count = 0
+        elif count >= 30 and wave == 4:
+            enemies[ii] = True
+        if ii >= 10 and wave == 1:
+            wave += 1
+        elif ii >= 25 and wave == 2:
+            wave += 1
+        elif ii >= 50 and wave == 3:
+            wave += 1
+        elif ii >= 100:
+            Play = False
+            Win = True
+        for i in range(100):
+            if enemies[i]:
+                eloc[i].y = eloc[i].y
+                ellipse(eloc[i].x, eloc[i].y, random(30, 50), random(30, 50))
+        for i in range(100):
+            if enemies[i]:
+                eloc[i].y += 4
+            
+
 
 def keyPressed():
     keysPressed[keyCode] = True
