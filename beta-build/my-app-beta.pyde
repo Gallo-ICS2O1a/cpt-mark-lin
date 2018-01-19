@@ -1,8 +1,6 @@
 Playerv1 = PVector(230, 600)
 Playerv2 = PVector(250, 550)
 Playerv3 = PVector(270, 600)
-speedx = 0
-speedy = 0
 keysPressed = [False for _ in range(128)]
 bgcoloura = 135
 bgcolourb = 206
@@ -16,11 +14,15 @@ img = None
 img_2 = None
 yimgA = 0
 yimgB = -500
-bullets = [False for _ in range(1000)]
-bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(1000)]
 backSize = 30
-i = 0
+score = 0
+bullets = []
+enemies = []
+speedx = 0
+speedy = 0
 delay = 0
+esize = []
+frames = 0
 
 
 def setup():
@@ -51,10 +53,10 @@ def setup():
 
 def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3
-    global keysPressed, bullets, bloc, delay
+    global keysPressed, bullets, enemies, delay, esize, frames
     global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play
-    global img, yimgA, yimgB, backSize, i
+    global img, yimgA, yimgB, backSize
     # background
     if Play:
         if bgcoloura > 0:
@@ -121,50 +123,47 @@ def draw():
             backSize = 40
         else:
             backSize = 30
-
-    # movement and shooting
     if Play:
         if keysPressed[37]:
-            speedx = -3
+            speedx = -5
         elif keysPressed[39]:
-            speedx = 3
+            speedx = 5
         if keysPressed[38]:
-            speedy = -3
+            speedy = -5
         elif keysPressed[40]:
-            speedy = 3
-        if keysPressed[32]:
-            bullets[i] = True
-            i = i + 1
-    for x in range(1000):
-        if bullets[x] is False:
-            bloc[x].x = Playerv2.x - 2.5
-    for x in range(1000):
-        if bullets[x] and delay >= 10:
-            fill(250, 129, 0)
-            strokeWeight(0)
-            bloc[x].x = bloc[x].x
-            bloc[x].y = bloc[x].y
-            rect(bloc[x].x, bloc[x].y, 5, 10)
-            if bloc[x].y >= Playerv2.y:
-                bloc[x].y = Playerv2.y
+            speedy = 5
+        if keysPressed[32] and delay == 10:
+            bullets.append(PVector(Playerv2.x - 2.5, Playerv2.y))
             delay = 0
-        else:
+        elif keysPressed[32] and delay != 10:
             delay += 1
-    for x in range(1000):
-        if bullets[x]:
-            bloc[x].y -= 7
-    Playerv1.x += speedx
-    Playerv2.x += speedx
-    Playerv3.x += speedx
-    Playerv1.y += speedy
-    Playerv2.y += speedy
-    Playerv3.y += speedy
-    speedx = 0
-    speedy = 0
-    
-    # Enemies
-    # Enemy 1
-    
+        if frames >= 60:
+            enemies.append(PVector(random(50, 450), 0))
+            esize.append(random(30, 50))
+            frames = 0
+        else:
+            frames += 1
+        for i in range(len(enemies)):
+            print(enemies[i].y)
+            enemies[i].y += 5
+            strokeWeight(1)
+            fill(128, 128, 128)
+            Size = esize[i]
+            ellipse(enemies[i].x, enemies[i].y, Size, Size)
+        for i in range(len(bullets)):
+            bullets[i].y -= 10
+            noStroke()
+            fill(250, 129, 0)
+            rect(bullets[i].x, bullets[i].y, 5, 15)
+        Playerv1.x += speedx
+        Playerv2.x += speedx
+        Playerv3.x += speedx
+        Playerv1.y += speedy
+        Playerv2.y += speedy
+        Playerv3.y += speedy
+        speedx = 0
+        speedy = 0
+
 
 def keyPressed():
     keysPressed[keyCode] = True
