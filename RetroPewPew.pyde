@@ -17,7 +17,7 @@ img_2 = None
 yimgA = 0
 yimgB = -500
 bullets = [False for _ in range(10000)]
-bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(10000)]
+bloc = [PVector(Playerv2.x - 2.5, 750) for _ in range(10000)]
 backSize = 30
 i = 0
 delay = 0
@@ -203,7 +203,7 @@ def draw():
                         hitCounter[k] += 1
                         noStroke()
                         fill(139, 0, 0)
-                        ellipse(eloc[k].x, eloc[k].y, 60, 60)
+                        ellipse(eloc[k].x, eloc[k].y - 5, esize[k], esize[k])
         for x in range(100):
             if esize[x] <= 30 and hitCounter[x] >= 10:
                 enemies[x] = False
@@ -214,14 +214,15 @@ def draw():
             elif esize[x] <= 50 and hitCounter[x] >= 30:
                 enemies[x] = False
                 score += 1
-        Playerv1.x += speedx
-        Playerv2.x += speedx
-        Playerv3.x += speedx
-        Playerv1.y += speedy
-        Playerv2.y += speedy
-        Playerv3.y += speedy
-        speedx = 0
-        speedy = 0
+        
+    Playerv1.x += speedx
+    Playerv2.x += speedx
+    Playerv3.x += speedx
+    Playerv1.y += speedy
+    Playerv2.y += speedy
+    Playerv3.y += speedy
+    speedx = 0
+    speedy = 0
 
 
 def keyPressed():
