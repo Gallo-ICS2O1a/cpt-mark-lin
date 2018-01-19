@@ -17,7 +17,7 @@ img_2 = None
 yimgA = 0
 yimgB = -500
 bullets = [False for _ in range(10000)]
-bloc = [PVector(0, 700) for _ in range(10000)]
+bloc = [PVector(Playerv2.x - 2.5, Playerv2.y) for _ in range(10000)]
 backSize = 30
 i = 0
 delay = 0
@@ -31,6 +31,7 @@ bcount = 0
 Win = False
 Lose = False
 hitCounter = [0 for _ in range(100)]
+score = 0
 
 
 def setup():
@@ -65,7 +66,7 @@ def draw():
     global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play, Win, Lose
     global img, yimgA, yimgB, backSize, i
-    global eloc, enemies, count, wave, ii, hitCounter, bcount
+    global eloc, enemies, count, wave, ii, hitCounter, bcount, score
     # background
     if Play:
         if bgcoloura > 0:
@@ -179,45 +180,49 @@ def draw():
         if keysPressed[32]:
             bullets[i] = True
             i = i + 1
-    for x in range(10000):
-        if bullets[x] is False:
-            bloc[x].x = Playerv2.x - 2.5
-        if bullets[x] and delay >= 5:
-            fill(250, 129, 0)
-            strokeWeight(0)
-            rect(bloc[x].x, bloc[x].y, 5, 20)
-            if bloc[x].y >= Playerv2.y:
-                bloc[x].y = Playerv2.y
-            delay = 0
-            bcount += 1
-        else:
-            delay += 1
-        if bullets[x]:
-            bloc[x].y -= 7
-    
-    for x in range(i):
-        for k in range(ii):
-            if bullets[x] and enemies[k]:
-                if (bloc[x].x >= eloc[k].x - esize[k]/2 and bloc[x].x <= eloc[k].x + esize[k]/2) and (bloc[x].y >= eloc[k].y - esize[k]/2 and bloc[x].y <= eloc[k].y + esize[k]/2):
-                    bullets[x] = False
-                    hitCounter[k] += 1
-    for x in range(100):
-        if esize[x] <= 30 and hitCounter[x] >= 10:
-            enemies[x] = False
-        elif esize[x] <= 40 and hitCounter[x] >= 20:
-            enemies[x] = False
-        elif esize[x] <= 50 and hitCounter[x] >= 30:
-            enemies[x] = False
-    Playerv1.x += speedx
-    Playerv2.x += speedx
-    Playerv3.x += speedx
-    Playerv1.y += speedy
-    Playerv2.y += speedy
-    Playerv3.y += speedy
-    speedx = 0
-    speedy = 0
-    for x in range(100):
-        print(hitCounter[x])
+        for x in range(10000):
+            if bullets[x] is False:
+                bloc[x].x = Playerv2.x - 2.5
+            if bullets[x] and delay >= 7.5:
+                fill(250, 129, 0)
+                strokeWeight(0)
+                rect(bloc[x].x, bloc[x].y, 5, 15)
+                if bloc[x].y >= Playerv2.y:
+                    bloc[x].y = Playerv2.y
+                delay = 0
+                bcount += 1
+            else:
+                delay += 1
+            if bullets[x]:
+                bloc[x].y -= 7
+        for x in range(i):
+            for k in range(ii):
+                if bullets[x] and enemies[k]:
+                    if (bloc[x].x >= eloc[k].x - esize[k]/2 and bloc[x].x <= eloc[k].x + esize[k]/2) and (bloc[x].y >= eloc[k].y - esize[k]/2 and bloc[x].y <= eloc[k].y + esize[k]/2):
+                        bullets[x] = False
+                        hitCounter[k] += 1
+                        noStroke()
+                        fill(139, 0, 0)
+                        ellipse(eloc[k].x, eloc[k].y, 60, 60)
+        for x in range(100):
+            if esize[x] <= 30 and hitCounter[x] >= 10:
+                enemies[x] = False
+                score += 1
+            elif esize[x] <= 40 and hitCounter[x] >= 20:
+                enemies[x] = False
+                score += 1
+            elif esize[x] <= 50 and hitCounter[x] >= 30:
+                enemies[x] = False
+                score += 1
+        Playerv1.x += speedx
+        Playerv2.x += speedx
+        Playerv3.x += speedx
+        Playerv1.y += speedy
+        Playerv2.y += speedy
+        Playerv3.y += speedy
+        speedx = 0
+        speedy = 0
+
 
 def keyPressed():
     keysPressed[keyCode] = True
