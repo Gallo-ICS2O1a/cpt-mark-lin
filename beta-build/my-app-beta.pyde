@@ -23,6 +23,9 @@ speedy = 0
 delay = 0
 esize = []
 frames = 0
+waves = 1
+count = 0
+hitCount = []
 
 
 def setup():
@@ -53,7 +56,7 @@ def setup():
 
 def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3
-    global keysPressed, bullets, enemies, delay, esize, frames
+    global keysPressed, bullets, enemies, delay, esize, frames, waves, count, hitCount
     global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play
     global img, yimgA, yimgB, backSize
@@ -137,14 +140,39 @@ def draw():
             delay = 0
         elif keysPressed[32] and delay != 10:
             delay += 1
-        if frames >= 60:
+        if frames >= 60 and waves == 1:
             enemies.append(PVector(random(50, 450), 0))
             esize.append(random(30, 50))
+            hitCount.append(0)
             frames = 0
+            count += 1
+        elif frames >= 40 and waves == 2:
+            enemies.append(PVector(random(50, 450), 0))
+            esize.append(random(30, 50))
+            hitCount.append(0)
+            frames = 0
+            count += 1
+        elif frames >= 20 and waves == 3:
+            enemies.append(PVector(random(50, 450), 0))
+            esize.append(random(30, 50))
+            hitCount.append(0)
+            frames = 0
+            count += 1
+        elif frames >= 10 and waves == 4:
+            enemies.append(PVector(random(50, 450), 0))
+            esize.append(random(30, 50))
+            hitCount.append(0)
+            frames = 0
+            count += 1
         else:
             frames += 1
+        if count >= 20 and waves == 1:
+            waves = 2
+        elif count >= 50 and waves == 2:
+            waves = 3
+        elif count >= 100 and waves == 3:
+            waves = 4
         for i in range(len(enemies)):
-            print(enemies[i].y)
             enemies[i].y += 5
             strokeWeight(1)
             fill(128, 128, 128)
@@ -155,6 +183,53 @@ def draw():
             noStroke()
             fill(250, 129, 0)
             rect(bullets[i].x, bullets[i].y, 5, 15)
+        
+        count = 0
+        for i in range(len(bullets)):
+            for k in range(len(enemies)):
+                if (bullets[i].x >= enemies[k].x - esize[k]/2
+                and bullets[i].x <= enemies[k].x + esize[k]/2
+                and bullets[i].y >= enemies[k].y - esize[k]/2
+                and bullets[i].y <= enemies[k].y + esize[k]/2):
+                    del bullets[i]
+                    bullets.append(PVector(0, 1000))
+                    count += 1
+                    hitCount[k] += 1
+                    noStroke()
+                    fill(249, 139, 0)
+                    ellipse(enemies[k].x, enemies[k].y, esize[k], esize[k])
+        for i in range(count):
+            bullets.pop()
+        count = 0
+        for i in range(len(enemies)):
+            if hitCount[i] >= 3 and esize[i] >= 30:
+                del enemies[i]
+                del hitCount[i]
+                del esize[i]
+                hitCount.append(0)
+                enemies.append(PVector(0, -100))
+                esize.append(0)
+                count += 1
+            elif hitCount[i] >= 5 and esize[i] >= 40:
+                del enemies[i]
+                del hitCount[i]
+                del esize[i]
+                hitCount.append(0)
+                enemies.append(PVector(0, -100))
+                esize.append(0)
+                count += 1
+            elif hitCount[i] >= 10 and esize[i] >= 50:
+                del enemies[i]
+                del hitCount[i]
+                del esize[i]
+                hitCount.append(0)
+                enemies.append(PVector(0, -100))
+                esize.append(0)
+                count += 1
+        for i in range(count):
+            hitCount.pop()
+            enemies.pop()
+            esize.pop()
         Playerv1.x += speedx
         Playerv2.x += speedx
         Playerv3.x += speedx
