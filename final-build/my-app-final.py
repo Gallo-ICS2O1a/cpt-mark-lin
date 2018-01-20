@@ -31,6 +31,7 @@ mainMenuSize = 40
 mainMenuX = 90
 deathexplosion = 50
 dead = False
+customSize = 30
 
 
 def setup():
@@ -61,10 +62,12 @@ def setup():
 
 def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3, score
-    global keysPressed, bullets, enemies, delay, esize, frames, waves, counter, hitCount
+    global keysPressed, bullets, enemies, delay
+    global esize, frames, waves, counter, hitCount
     global bgcoloura, bgcolourb, bgcolourc
     global PlaySize, HTPSize, HTP, Menu, Play, Defeat
-    global img, yimgA, yimgB, backSize, mainMenuSize, mainMenuX, deathexplosion, dead
+    global img, yimgA, yimgB, backSize, mainMenuSize
+    global mainMenuX, deathexplosion, dead, customSize
     # background
     if Play:
         if bgcoloura > 0:
@@ -92,7 +95,9 @@ def draw():
         fill(50, 200, 10)
         strokeWeight(3)
         stroke(255)
-        triangle(Playerv1.x, Playerv1.y, Playerv2.x, Playerv2.y, Playerv3.x, Playerv3.y)
+        triangle(Playerv1.x, Playerv1.y,
+                 Playerv2.x, Playerv2.y,
+                 Playerv3.x, Playerv3.y)
     # menu screen
     if Menu:
         textSize(50)
@@ -115,9 +120,13 @@ def draw():
         else:
             PlaySize = 30
 
-        textSize(30)
+        textSize(customSize)
         fill(0, 128, 0)
         text("<CUSTOMIZATION>", 20, 300)
+        if mouseX >= 20 and mouseX <= 300 and mouseY >= 270 and mouseY <= 300:
+            customSize = 40
+        else:
+            customSize = 30
     # How To Play
     if HTP:
         textSize(20)
