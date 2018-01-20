@@ -18,14 +18,19 @@ backSize = 30
 score = 0
 bullets = []
 enemies = []
+esize = []
+hitCount = []
 speedx = 0
 speedy = 0
 delay = 0
-esize = []
-frames = 0
 waves = 1
-count = 0
-hitCount = []
+frames = 0
+counter = 0
+Defeat = False
+mainMenuSize = 40
+mainMenuX = 90
+deathexplosion = 50
+dead = False
 
 
 def setup():
@@ -55,11 +60,11 @@ def setup():
 
 
 def draw():
-    global speedx, speedy, Playerv1, Playerv2, Playerv3
-    global keysPressed, bullets, enemies, delay, esize, frames, waves, count, hitCount
+    global speedx, speedy, Playerv1, Playerv2, Playerv3, score
+    global keysPressed, bullets, enemies, delay, esize, frames, waves, counter, hitCount
     global bgcoloura, bgcolourb, bgcolourc
-    global PlaySize, HTPSize, HTP, Menu, Play
-    global img, yimgA, yimgB, backSize
+    global PlaySize, HTPSize, HTP, Menu, Play, Defeat
+    global img, yimgA, yimgB, backSize, mainMenuSize, mainMenuX, deathexplosion, dead
     # background
     if Play:
         if bgcoloura > 0:
@@ -85,7 +90,7 @@ def draw():
     # Player
     if Menu or Play:
         fill(50, 200, 10)
-        strokeWeight(5)
+        strokeWeight(3)
         stroke(255)
         triangle(Playerv1.x, Playerv1.y, Playerv2.x, Playerv2.y, Playerv3.x, Playerv3.y)
     # menu screen
@@ -119,7 +124,7 @@ def draw():
         fill(0, 128, 0)
         text("ARROW KEYS - Up, Down, Left, Right", 20, 100)
         text("SPACE - Shoot", 20, 140)
-        text("Avoid incoming enemy bullets and defeat the boss to win!!", 20, 160, 480, 300)
+        text("Destroy incoming asteroids to gain points! Make sure you don't get hit though!\nFight for as long as possible without dying!", 20, 160, 480, 300)
         textSize(backSize)
         text("<BACK>", 20, 650)
         if mouseX >= 20 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
@@ -127,6 +132,9 @@ def draw():
         else:
             backSize = 30
     if Play:
+        textSize(50)
+        fill(0)
+        text(score, 225, 350)
         if keysPressed[37]:
             speedx = -5
         elif keysPressed[39]:
@@ -135,45 +143,50 @@ def draw():
             speedy = -5
         elif keysPressed[40]:
             speedy = 5
-        if keysPressed[32] and delay == 10:
+        if keysPressed[32] and delay == 5:
             bullets.append(PVector(Playerv2.x - 2.5, Playerv2.y))
             delay = 0
-        elif keysPressed[32] and delay != 10:
+        elif keysPressed[32] and delay != 5:
             delay += 1
         if frames >= 60 and waves == 1:
             enemies.append(PVector(random(50, 450), 0))
-            esize.append(random(30, 50))
+            esize.append(random(30, 70))
             hitCount.append(0)
             frames = 0
-            count += 1
+            counter += 1
         elif frames >= 40 and waves == 2:
             enemies.append(PVector(random(50, 450), 0))
-            esize.append(random(30, 50))
+            esize.append(random(30, 70))
             hitCount.append(0)
             frames = 0
-            count += 1
+            counter += 1
         elif frames >= 20 and waves == 3:
             enemies.append(PVector(random(50, 450), 0))
-            esize.append(random(30, 50))
+            esize.append(random(30, 70))
             hitCount.append(0)
             frames = 0
-            count += 1
+            counter += 1
         elif frames >= 10 and waves == 4:
             enemies.append(PVector(random(50, 450), 0))
-            esize.append(random(30, 50))
+            esize.append(random(30, 70))
             hitCount.append(0)
             frames = 0
-            count += 1
+            counter += 1
         else:
             frames += 1
-        if count >= 20 and waves == 1:
+        if counter >= 20 and waves == 1:
             waves = 2
-        elif count >= 50 and waves == 2:
+        elif counter >= 50 and waves == 2:
             waves = 3
-        elif count >= 100 and waves == 3:
+        elif counter >= 100 and waves == 3:
             waves = 4
         for i in range(len(enemies)):
-            enemies[i].y += 5
+            if esize[i] >= 50:
+                enemies[i].y += 7
+            elif esize >= 40:
+                enemies[i].y += 6
+            elif esize >= 30:
+                enemies[i].y += 5
             strokeWeight(1)
             fill(128, 128, 128)
             Size = esize[i]
@@ -183,9 +196,12 @@ def draw():
             noStroke()
             fill(250, 129, 0)
             rect(bullets[i].x, bullets[i].y, 5, 15)
-        
         count = 0
         for i in range(len(bullets)):
+            if bullets[i].y <= -100:
+                del bullets[i]
+                bullets.append(PVector(0, 1000))
+                count += 1
             for k in range(len(enemies)):
                 if (bullets[i].x >= enemies[k].x - esize[k]/2
                 and bullets[i].x <= enemies[k].x + esize[k]/2
@@ -202,7 +218,7 @@ def draw():
             bullets.pop()
         count = 0
         for i in range(len(enemies)):
-            if hitCount[i] >= 3 and esize[i] >= 30:
+            if enemies[i].y >= 800:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -210,7 +226,7 @@ def draw():
                 enemies.append(PVector(0, -100))
                 esize.append(0)
                 count += 1
-            elif hitCount[i] >= 5 and esize[i] >= 40:
+            if hitCount[i] >= 25 and esize[i] >= 50:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -218,7 +234,8 @@ def draw():
                 enemies.append(PVector(0, -100))
                 esize.append(0)
                 count += 1
-            elif hitCount[i] >= 10 and esize[i] >= 50:
+                score += 5
+            elif hitCount[i] >= 10 and esize[i] >= 40:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -226,18 +243,90 @@ def draw():
                 enemies.append(PVector(0, -100))
                 esize.append(0)
                 count += 1
+                score += 2
+            elif hitCount[i] >= 5 and esize[i] >= 30:
+                del enemies[i]
+                del hitCount[i]
+                del esize[i]
+                hitCount.append(0)
+                enemies.append(PVector(0, -100))
+                esize.append(0)
+                count += 1
+                score += 1
         for i in range(count):
             hitCount.pop()
             enemies.pop()
             esize.pop()
+        
+        defeated = 0
+        for k in range(len(enemies)):
+            if (Playerv2.x >= enemies[k].x - esize[k]/2
+            and Playerv2.x <= enemies[k].x + esize[k]/2
+            and Playerv2.y >= enemies[k].y - esize[k]/2
+            and Playerv2.y <= enemies[k].y + esize[k]/2):
+                dead = True
+                del enemies[k]
+                del esize[k]
+                del hitCount[k]
+                break
+            elif (Playerv1.x >= enemies[k].x - esize[k]/2
+            and Playerv1.x <= enemies[k].x + esize[k]/2
+            and Playerv1.y >= enemies[k].y - esize[k]/2
+            and Playerv1.y <= enemies[k].y + esize[k]/2):
+                dead = True
+                del enemies[k]
+                del esize[k]
+                del hitCount[k]
+                break
+            elif (Playerv3.x >= enemies[k].x - esize[k]/2
+            and Playerv3.x <= enemies[k].x + esize[k]/2
+            and Playerv3.y >= enemies[k].y - esize[k]/2
+            and Playerv3.y <= enemies[k].y + esize[k]/2):
+                dead = True
+                del enemies[k]
+                del esize[k]
+                del hitCount[k]
+                break
+        deadx = False
+        if dead and deathexplosion <= 200:
+            deathexplosion += 3
+            fill(238, 232, 170)
+            noStroke()
+            ellipse(Playerv2.x, Playerv2.y, deathexplosion, deathexplosion)
+        if deathexplosion >= 200:
+            deadx = True
+        if dead and deadx:
+            Defeat = True
+            Play = False
         Playerv1.x += speedx
         Playerv2.x += speedx
         Playerv3.x += speedx
-        Playerv1.y += speedy
-        Playerv2.y += speedy
-        Playerv3.y += speedy
+        if Playerv1.y >= 700 and keysPressed[40]:
+            Playerv1.y -= speedy
+            Playerv2.y -= speedy
+            Playerv3.y -= speedy
+        else:
+            Playerv1.y += speedy
+            Playerv2.y += speedy
+            Playerv3.y += speedy
         speedx = 0
         speedy = 0
+    if Defeat:
+        textSize(50)
+        fill(128, 0, 0)
+        text("DEFEAT", 150, 100)
+        textSize(30)
+        fill(255)
+        text("Your Final Score: " + str(score), 100, 200)
+        textSize(mainMenuSize)
+        fill(0)
+        text("<MAIN MENU>", mainMenuX, 350)
+        if mouseX >= 90 and mouseX <= 350 and mouseY >= 310 and mouseY <= 350:
+            mainMenuSize = 50
+            mainMenuX = 70
+        else:
+            mainMenuSize = 40
+            mainMenuX = 90
 
 
 def keyPressed():
@@ -249,15 +338,34 @@ def keyReleased():
 
 
 def mouseClicked():
-    global Menu, Play, HTP
+    global Menu, Play, HTP, Defeat, dead, deathexplosion
+    global bgcoloura, bgcolourb, bgcolourc, score, waves
+    global enemies, bullets, Playerv1, Playerv2, Playerv3
     if Menu:
-        if mouseX >= 20 and mouseX <= 150 and mouseY >= 220 and mouseY <= 250:
+        if mouseX >= 50 and mouseX <= 150 and mouseY >= 220 and mouseY <= 250:
             Play = True
             Menu = False
-        if mouseX >= 20 and mouseX <= 150 and mouseY >= 170 and mouseY <= 200:
+        if mouseX >= 50 and mouseX <= 150 and mouseY >= 170 and mouseY <= 200:
             Menu = False
             HTP = True
     if HTP:
-        if mouseX >= 20 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
+        if mouseX >= 50 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
             HTP = False
             Menu = True
+    if Defeat:
+        if mouseX >= 90 and mouseX <= 300 and mouseY >= 310 and mouseY <= 350:
+            Menu = True
+            Defeat = False
+            dead = False
+            deathexplosion = 50
+            bgcoloura = 135
+            bgcolourb = 206
+            bgcolourc = 250
+            score = 0
+            waves = 1
+            enemies = []
+            bullets = []
+            Playerv1 = PVector(230, 600)
+            Playerv2 = PVector(250, 550)
+            Playerv3 = PVector(270, 600)
+            
