@@ -226,7 +226,7 @@ def draw():
                 enemies.append(PVector(0, -100))
                 esize.append(0)
                 count += 1
-            if hitCount[i] >= 25 and esize[i] >= 50:
+            if hitCount[i] >= 10 and esize[i] >= 50:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -234,8 +234,8 @@ def draw():
                 enemies.append(PVector(0, -100))
                 esize.append(0)
                 count += 1
-                score += 5
-            elif hitCount[i] >= 10 and esize[i] >= 40:
+                score += 3
+            elif hitCount[i] >= 7 and esize[i] >= 40 and esize[i] <= 49:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -244,7 +244,7 @@ def draw():
                 esize.append(0)
                 count += 1
                 score += 2
-            elif hitCount[i] >= 5 and esize[i] >= 30:
+            elif hitCount[i] >= 5 and esize[i] >= 30 and esize[i] <= 39:
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
