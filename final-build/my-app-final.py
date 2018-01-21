@@ -32,6 +32,14 @@ mainMenuX = 90
 deathexplosion = 50
 dead = False
 customSize = 30
+CSTM = False
+pcoloura = 0
+pcolourb = 128
+pcolourc = 0
+pcolourindex = 0
+pcolour = ["Green", "Blue", "Red", "Purple", "Yellow"]
+arrowA = 30
+arrowB = 30
 
 
 def setup():
@@ -68,6 +76,28 @@ def draw():
     global PlaySize, HTPSize, HTP, Menu, Play, Defeat
     global img, yimgA, yimgB, backSize, mainMenuSize
     global mainMenuX, deathexplosion, dead, customSize
+    global pcoloura, pcolourb, pcolourc, pcolourindex, pcolour
+    global arrowA, arrowB
+    if pcolourindex == 0:
+            pcoloura = 0
+            pcolourb = 128
+            pcolourc = 0
+    elif pcolourindex == 1:
+        pcoloura = 0
+        pcolourb = 0
+        pcolourc = 255
+    elif pcolourindex == 2:
+        pcoloura = 255
+        pcolourb = 0
+        pcolourc = 0
+    elif pcolourindex == 3:
+        pcoloura = 128
+        pcolourb = 0
+        pcolourc = 128 
+    elif pcolourindex == 4:
+        pcoloura = 255
+        pcolourb = 255
+        pcolourc = 0
     # background
     if Play:
         if bgcoloura > 0:
@@ -92,7 +122,7 @@ def draw():
 
     # Player
     if Menu or Play:
-        fill(50, 200, 10)
+        fill(pcoloura, pcolourb, pcolourc)
         strokeWeight(3)
         stroke(255)
         triangle(Playerv1.x, Playerv1.y,
@@ -140,6 +170,38 @@ def draw():
             backSize = 40
         else:
             backSize = 30
+    # Customization
+    if CSTM:
+        textSize(40)
+        fill(0, 128, 0)
+        text("CUSTOMIZATION", 80, 100)
+        textSize(30)
+        fill(0)
+        text("Player Colour:      " + pcolour[pcolourindex], 25, 200)
+        textSize(arrowA)
+        text("<-", 230, 200)
+        if mouseX >= 230 and mouseX <= 270 and mouseY >= 170 and mouseY <= 200:
+            arrowA = 40
+        else:
+            arrowA = 30
+        textSize(arrowB)
+        text("->", 380, 200)
+        if mouseX >= 380 and mouseX <= 420 and mouseY >= 170 and mouseY <= 200:
+            arrowB = 40
+        else:
+            arrowB = 30
+        textSize(backSize)
+        text("<BACK>", 20, 650)
+        if mouseX >= 20 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
+            backSize = 40
+        else:
+            backSize = 30
+        fill(pcoloura, pcolourb, pcolourc)
+        strokeWeight(3)
+        stroke(255)
+        triangle(Playerv1.x, Playerv1.y,
+                 Playerv2.x, Playerv2.y,
+                 Playerv3.x, Playerv3.y)
     if Play:
         textSize(50)
         fill(0)
@@ -297,12 +359,13 @@ def draw():
                 del hitCount[k]
                 break
         deadx = False
-        if dead and deathexplosion <= 200:
-            deathexplosion += 3
+        if dead and deathexplosion <= 1000:
+            deathexplosion += 10
             fill(238, 232, 170)
             noStroke()
             ellipse(Playerv2.x, Playerv2.y, deathexplosion, deathexplosion)
-        if deathexplosion >= 200:
+            keysPressed = [False for _ in range(128)]
+        if deathexplosion >= 1000:
             deadx = True
         if dead and deadx:
             Defeat = True
@@ -347,9 +410,9 @@ def keyReleased():
 
 
 def mouseClicked():
-    global Menu, Play, HTP, Defeat, dead, deathexplosion
+    global Menu, Play, HTP, Defeat, CSTM, dead, deathexplosion, counter
     global bgcoloura, bgcolourb, bgcolourc, score, waves
-    global enemies, bullets, Playerv1, Playerv2, Playerv3
+    global enemies, bullets, Playerv1, Playerv2, Playerv3, pcolourindex
     if Menu:
         if mouseX >= 50 and mouseX <= 150 and mouseY >= 220 and mouseY <= 250:
             Play = True
@@ -357,6 +420,9 @@ def mouseClicked():
         if mouseX >= 50 and mouseX <= 150 and mouseY >= 170 and mouseY <= 200:
             Menu = False
             HTP = True
+        if mouseX >= 20 and mouseX <= 300 and mouseY >= 270 and mouseY <= 300:
+            CSTM = True
+            Menu = False
     if HTP:
         if mouseX >= 50 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
             HTP = False
@@ -372,9 +438,23 @@ def mouseClicked():
             bgcolourc = 250
             score = 0
             waves = 1
+            counter = 0
             enemies = []
             bullets = []
             Playerv1 = PVector(230, 600)
             Playerv2 = PVector(250, 550)
             Playerv3 = PVector(270, 600)
-            
+    if CSTM:
+        if mouseX >= 230 and mouseX <= 270 and mouseY >= 170 and mouseY <= 200:
+            if pcolourindex == 0:
+                pcolourindex = 4
+            else:
+                pcolourindex -= 1
+        if mouseX >= 380 and mouseX <= 420 and mouseY >= 170 and mouseY <= 200:
+            if pcolourindex == 4:
+                pcolourindex = 0
+            else:
+                pcolourindex += 1
+        if mouseX >= 20 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
+            CSTM = False
+            Menu = True
