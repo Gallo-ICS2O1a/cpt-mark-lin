@@ -486,7 +486,7 @@ def keyReleased():
     keysPressed[keyCode] = False
 
 
-def mouseClicked():
+def mouseReleased():
     global Menu, Play, HTP, Defeat, CSTM, dead, deathexplosion, counter
     global bgcoloura, bgcolourb, bgcolourc, score, waves, powerups, BOOST
     global enemies, bullets, Playerv1, Playerv2, Playerv3, pcolourindex
