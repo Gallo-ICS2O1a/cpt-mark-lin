@@ -467,7 +467,7 @@ def keyReleased():
 
 def mouseClicked():
     global Menu, Play, HTP, Defeat, CSTM, dead, deathexplosion, counter
-    global bgcoloura, bgcolourb, bgcolourc, score, waves
+    global bgcoloura, bgcolourb, bgcolourc, score, waves, powerups
     global enemies, bullets, Playerv1, Playerv2, Playerv3, pcolourindex
     if Menu:
         if mouseX >= 50 and mouseX <= 150 and mouseY >= 220 and mouseY <= 250:
@@ -497,6 +497,7 @@ def mouseClicked():
             counter = 0
             enemies = []
             bullets = []
+            powerups = []
             Playerv1 = PVector(230, 600)
             Playerv2 = PVector(250, 550)
             Playerv3 = PVector(270, 600)
