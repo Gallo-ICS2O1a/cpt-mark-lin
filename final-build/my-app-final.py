@@ -212,13 +212,25 @@ def draw():
         fill(0)
         text(score, 225, 350)
         if keysPressed[37]:
-            speedx = -5
+            if BOOST:
+                speedx = -10
+            else: 
+                speedx = -5
         elif keysPressed[39]:
-            speedx = 5
+            if BOOST:
+                speedx = 10
+            else:
+                speedx = 5
         if keysPressed[38]:
-            speedy = -5
+            if BOOST:
+                speedy = -10
+            else:
+                speedy = -5
         elif keysPressed[40]:
-            speedy = 5
+            if BOOST:
+                speedy = 10
+            else:
+                speedy = 5
         if keysPressed[32] and delay == 5 and BOOST is False:
             bullets.append(PVector(Playerv2.x, Playerv2.y))
             delay = 0
@@ -321,7 +333,7 @@ def draw():
                 score += 3
             elif hitCount[i] >= 7 and esize[i] >= 40 and esize[i] <= 49:
                 n = random(100)
-                if n > 95:
+                if n > 90:
                     powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
@@ -333,7 +345,7 @@ def draw():
                 score += 2
             elif hitCount[i] >= 5 and esize[i] >= 30 and esize[i] <= 39:
                 n = random(100)
-                if n > 95:
+                if n > 85:
                     powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
@@ -383,7 +395,7 @@ def draw():
             powerups.pop()
         if BOOST:
             boostcounter += 1
-        if boostcounter >= 600:
+        if boostcounter >= 900:
             boostcounter = 0
             BOOST = False
         for k in range(len(enemies)):
@@ -426,9 +438,18 @@ def draw():
         if dead and deadx:
             Defeat = True
             Play = False
-        Playerv1.x += speedx
-        Playerv2.x += speedx
-        Playerv3.x += speedx
+        if Playerv1.x <= 0 and keysPressed[37]:
+            Playerv1.x -= speedx
+            Playerv2.x -= speedx
+            Playerv3.x -= speedx
+        elif Playerv3.x >= 500 and keysPressed[39]:
+            Playerv1.x -= speedx
+            Playerv2.x -= speedx
+            Playerv3.x -= speedx
+        else:
+            Playerv1.x += speedx
+            Playerv2.x += speedx
+            Playerv3.x += speedx
         if Playerv1.y >= 700 and keysPressed[40]:
             Playerv1.y -= speedy
             Playerv2.y -= speedy
@@ -467,7 +488,7 @@ def keyReleased():
 
 def mouseClicked():
     global Menu, Play, HTP, Defeat, CSTM, dead, deathexplosion, counter
-    global bgcoloura, bgcolourb, bgcolourc, score, waves, powerups
+    global bgcoloura, bgcolourb, bgcolourc, score, waves, powerups, BOOST
     global enemies, bullets, Playerv1, Playerv2, Playerv3, pcolourindex
     if Menu:
         if mouseX >= 50 and mouseX <= 150 and mouseY >= 220 and mouseY <= 250:
@@ -488,6 +509,7 @@ def mouseClicked():
             Menu = True
             Defeat = False
             dead = False
+            BOOST = False
             deathexplosion = 50
             bgcoloura = 135
             bgcolourb = 206
