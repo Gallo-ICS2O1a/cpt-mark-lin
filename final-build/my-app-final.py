@@ -40,6 +40,9 @@ pcolourindex = 0
 pcolour = ["Green", "Blue", "Red", "Purple", "Yellow"]
 arrowA = 30
 arrowB = 30
+powerups = []
+BOOST = False
+boostcounter = 0
 
 
 def setup():
@@ -70,9 +73,9 @@ def setup():
 
 def draw():
     global speedx, speedy, Playerv1, Playerv2, Playerv3, score
-    global keysPressed, bullets, enemies, delay
-    global esize, frames, waves, counter, hitCount
-    global bgcoloura, bgcolourb, bgcolourc
+    global keysPressed, bullets, enemies, delay, powerups
+    global esize, frames, waves, counter, hitCount, BOOST
+    global bgcoloura, bgcolourb, bgcolourc, boostcounter
     global PlaySize, HTPSize, HTP, Menu, Play, Defeat
     global img, yimgA, yimgB, backSize, mainMenuSize
     global mainMenuX, deathexplosion, dead, customSize
@@ -163,7 +166,9 @@ def draw():
         fill(0, 128, 0)
         text("ARROW KEYS - Up, Down, Left, Right", 20, 100)
         text("SPACE - Shoot", 20, 140)
-        text("Destroy incoming asteroids to gain points! Make sure you don't get hit though!\nFight for as long as possible without dying!", 20, 160, 480, 300)
+        text("Destroy incoming asteroids to gain points! Make sure you don't get hit though!", 20, 160, 480, 300)
+        text("Score as many points as you can before dying!", 20, 240, 480, 300)
+        text("Green Squares dropped from enemies are a boost", 20, 280, 480, 300)
         textSize(backSize)
         text("<BACK>", 20, 650)
         if mouseX >= 20 and mouseX <= 150 and mouseY >= 620 and mouseY <= 650:
@@ -214,8 +219,13 @@ def draw():
             speedy = -5
         elif keysPressed[40]:
             speedy = 5
-        if keysPressed[32] and delay == 5:
-            bullets.append(PVector(Playerv2.x - 2.5, Playerv2.y))
+        if keysPressed[32] and delay == 5 and BOOST is False:
+            bullets.append(PVector(Playerv2.x, Playerv2.y))
+            delay = 0
+        elif keysPressed[32] and delay == 5 and BOOST:
+            bullets.append(PVector(Playerv2.x - 20, Playerv2.y))
+            bullets.append(PVector(Playerv2.x, Playerv2.y))
+            bullets.append(PVector(Playerv2.x + 20, Playerv2.y))
             delay = 0
         elif keysPressed[32] and delay != 5:
             delay += 1
@@ -298,6 +308,9 @@ def draw():
                 esize.append(0)
                 count += 1
             if hitCount[i] >= 10 and esize[i] >= 50:
+                n = random(100)
+                if n > 95:
+                    powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -307,6 +320,9 @@ def draw():
                 count += 1
                 score += 3
             elif hitCount[i] >= 7 and esize[i] >= 40 and esize[i] <= 49:
+                n = random(100)
+                if n > 95:
+                    powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -316,6 +332,9 @@ def draw():
                 count += 1
                 score += 2
             elif hitCount[i] >= 5 and esize[i] >= 30 and esize[i] <= 39:
+                n = random(100)
+                if n > 95:
+                    powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
                 del esize[i]
@@ -328,8 +347,45 @@ def draw():
             hitCount.pop()
             enemies.pop()
             esize.pop()
-        
-        defeated = 0
+        for i in range(len(powerups)):
+            fill(0, 128, 0)
+            stroke(255)
+            strokeWeight(1)
+            rect(powerups[i].x, powerups[i].y, 30, 30)
+            powerups[i].y += 1
+        count = 0
+        for k in range(len(powerups)):
+            if (Playerv2.x >= powerups[k].x - 15
+            and Playerv2.x <= powerups[k].x + 15
+            and Playerv2.y >= powerups[k].y - 15
+            and Playerv2.y <= powerups[k].y + 15):
+                BOOST = True
+                del powerups[k]
+                powerups.append(PVector(0, -100))
+                count += 1
+            if (Playerv1.x >= powerups[k].x - 15
+            and Playerv1.x <= powerups[k].x + 15
+            and Playerv1.y >= powerups[k].y - 15
+            and Playerv1.y <= powerups[k].y + 15):
+                BOOST = True
+                del powerups[k]
+                powerups.append(PVector(0, -100))
+                count += 1
+            if (Playerv3.x >= powerups[k].x - 15
+            and Playerv3.x <= powerups[k].x + 15
+            and Playerv3.y >= powerups[k].y - 15
+            and Playerv3.y <= powerups[k].y + 15):
+                BOOST = True
+                del powerups[k]
+                powerups.append(PVector(0, -100))
+                count += 1
+        for i in range(count):
+            powerups.pop()
+        if BOOST:
+            boostcounter += 1
+        if boostcounter >= 600:
+            boostcounter = 0
+            BOOST = False
         for k in range(len(enemies)):
             if (Playerv2.x >= enemies[k].x - esize[k]/2
             and Playerv2.x <= enemies[k].x + esize[k]/2
