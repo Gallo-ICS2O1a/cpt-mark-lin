@@ -321,7 +321,7 @@ def draw():
                 count += 1
             if hitCount[i] >= 10 and esize[i] >= 50:
                 n = random(100)
-                if n > 95:
+                if n > 85:
                     powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
@@ -345,7 +345,7 @@ def draw():
                 score += 2
             elif hitCount[i] >= 5 and esize[i] >= 30 and esize[i] <= 39:
                 n = random(100)
-                if n > 85:
+                if n > 95:
                     powerups.append(PVector(enemies[i].x, enemies[i].y))
                 del enemies[i]
                 del hitCount[i]
